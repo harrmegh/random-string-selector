@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random String Selector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            margin: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Random String Selector</h1>
+        <textarea id="inputStrings" rows="10" cols="50" placeholder="Enter strings here, one per line"></textarea><br><br>
+        <button onclick="selectRandomString()">Select Random String</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        async function selectRandomString() {
+            const input = document.getElementById('inputStrings').value;
+            const strings = input.split('\n').map(s => s.trim()).filter(s => s);
+
+            const response = await fetch('/select-string', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ strings })
+            });
+
+            const data = await response.json();
+            document.getElementById('result').innerText = `Selected String: ${data.selectedString}`;
+        }
+    </script>
+</body>
+</html>
